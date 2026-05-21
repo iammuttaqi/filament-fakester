@@ -1,6 +1,6 @@
 {
     "name": "iammuttaqi/filament-fakester",
-    "description": "This is my package filament-fakester",
+    "description": "A Filament plugin to generate fake data for your Laravel application.",
     "keywords": [
         "iammuttaqi",
         "laravel",
