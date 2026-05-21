@@ -37,10 +37,8 @@ return [
 
     'features' => [
         'hint_action'      => true,
-        'fill_form_action' => true,
         'fake_row_action'  => true,
         'bulk_fake_action' => true,
-        'seed_resource'    => true,
     ],
 
     'default_count' => 25,
@@ -83,25 +81,43 @@ app(\Iammuttaqi\FilamentFakester\Support\MatcherRegistry::class)
     );
 ```
 
-### Resource seed shortcut
+### Page-level helpers
+
+Filament v5 has no global form-level header action hook, so two helpers are opt-in per page — drop them into the page's `getHeaderActions()`.
+
+**Fill the whole form** (Create / Edit pages):
 
 ```php
-// inside ListPosts.php
+use Iammuttaqi\FilamentFakester\Actions\FillFormWithFakerAction;
+
 protected function getHeaderActions(): array
 {
     return [
-        \Iammuttaqi\FilamentFakester\Actions\SeedResourceAction::make(\App\Models\Post::class, 100),
+        FillFormWithFakerAction::make(),
+    ];
+}
+```
+
+**Seed N records via factory** (List pages):
+
+```php
+use Iammuttaqi\FilamentFakester\Actions\SeedResourceAction;
+
+protected function getHeaderActions(): array
+{
+    return [
+        SeedResourceAction::make(\App\Models\Post::class, 100),
     ];
 }
 ```
 
 ### Features
 
-- **Hint action**: Sparkles icon on every `TextInput`, `Textarea`, `RichEditor`, `MarkdownEditor` → click to fill that field with context-aware fake data.
-- **Fill form**: Form header action populates every visible field.
-- **Fake row**: Per-row table action regenerates that record using its `Factory::definition()`.
-- **Bulk fake rows**: Table header action creates N records via factory.
-- **Resource seed**: Opt-in `SeedResourceAction` for `List*` pages.
+- **Hint action** (auto-wired): Sparkles icon on every `TextInput`, `Textarea`, `RichEditor`, `MarkdownEditor` → click to fill that field with context-aware fake data.
+- **Fake row** (auto-wired): Per-row table action regenerates that record using its `Factory::definition()`.
+- **Bulk fake rows** (auto-wired): Table header action creates N records via factory.
+- **Fill whole form** (opt-in via `FillFormWithFakerAction::make()`): page header button that populates every visible field.
+- **Resource seed** (opt-in via `SeedResourceAction::make()`): seed N rows from a `List*` page.
 
 All actions hidden when `FAKESTER_ENABLED=false` or in production by default.
 

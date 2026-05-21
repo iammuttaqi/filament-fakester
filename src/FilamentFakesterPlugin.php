@@ -6,7 +6,6 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Iammuttaqi\FilamentFakester\Actions\BulkFakeRecordsAction;
 use Iammuttaqi\FilamentFakester\Actions\FakeRowTableAction;
-use Iammuttaqi\FilamentFakester\Actions\FillFormWithFakerAction;
 use Iammuttaqi\FilamentFakester\Concerns\RegistersFakerHints;
 
 class FilamentFakesterPlugin implements Plugin
@@ -35,9 +34,6 @@ class FilamentFakesterPlugin implements Plugin
 
         if ($features['hint_action'] ?? false) {
             $this->registerHintActions();
-        }
-        if ($features['fill_form_action'] ?? false) {
-            FillFormWithFakerAction::register();
         }
         if ($features['fake_row_action'] ?? false) {
             FakeRowTableAction::register();
