@@ -1,32 +1,30 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "iammuttaqi/filament-fakester",
+    "description": "This is my package filament-fakester",
     "keywords": [
-        ":vendor_name",
+        "iammuttaqi",
         "laravel",
         "filamentphp",
         "filament",
         "filament-plugin",
-        ":package_slug"
+        "filament-fakester"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/iammuttaqi/filament-fakester",
     "support": {
-        "issues": "https://github.com/:vendor_slug/:package_slug/issues",
-        "source": "https://github.com/:vendor_slug/:package_slug"
+        "issues": "https://github.com/iammuttaqi/filament-fakester/issues",
+        "source": "https://github.com/iammuttaqi/filament-fakester"
     },
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Muttaqi",
+            "email": "muntasermuttaqi@gmail.com",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.2",
-        "filament/filament": "^5.0",
         "filament/forms": "^5.0",
-        "filament/tables": "^5.0",
         "spatie/laravel-package-tools": "^1.15.0"
     },
     "require-dev": {
@@ -43,13 +41,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Iammuttaqi\\FilamentFakester\\": "src/",
+            "Iammuttaqi\\FilamentFakester\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/"
+            "Iammuttaqi\\FilamentFakester\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -64,10 +62,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Iammuttaqi\\FilamentFakester\\FilamentFakesterServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "FilamentFakester": "Iammuttaqi\\FilamentFakester\\Facades\\FilamentFakester"
             }
         }
     },

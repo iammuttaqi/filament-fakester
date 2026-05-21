@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Iammuttaqi\FilamentFakester\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class FilamentFakesterCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'filament-fakester';
 
     public $description = 'My command';
 
