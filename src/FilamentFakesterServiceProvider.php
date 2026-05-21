@@ -8,13 +8,13 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Iammuttaqi\FilamentFakester\Commands\FilamentFakesterCommand;
+use Iammuttaqi\FilamentFakester\Testing\TestsFilamentFakester;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Iammuttaqi\FilamentFakester\Commands\FilamentFakesterCommand;
-use Iammuttaqi\FilamentFakester\Testing\TestsFilamentFakester;
 
 class FilamentFakesterServiceProvider extends PackageServiceProvider
 {
