@@ -27,11 +27,11 @@ class FilamentFakesterPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        if (! config('fakester.enabled')) {
+        if (! config('filament-fakester.enabled')) {
             return;
         }
 
-        $features = array_merge(config('fakester.features', []), $this->featureOverrides);
+        $features = array_merge(config('filament-fakester.features', []), $this->featureOverrides);
 
         if ($features['hint_action'] ?? false) {
             $this->registerHintActions();

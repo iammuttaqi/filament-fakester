@@ -20,7 +20,7 @@ trait RegistersFakerHints
                 fn () => Action::make('fakester-fill')
                     ->label(false)
                     ->icon('heroicon-o-sparkles')
-                    ->visible(fn () => config('fakester.enabled') && ! $component->isDisabled())
+                    ->visible(fn () => config('filament-fakester.enabled') && ! $component->isDisabled())
                     ->action(fn () => $component->state($resolver->forComponent($component))),
             ));
         }

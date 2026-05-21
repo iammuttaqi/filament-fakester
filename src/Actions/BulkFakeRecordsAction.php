@@ -18,13 +18,13 @@ class BulkFakeRecordsAction
                     ->label('Create fake rows')
                     ->icon('heroicon-o-sparkles')
                     ->color('gray')
-                    ->visible(fn () => config('fakester.enabled') && static::modelHasFactory($table))
+                    ->visible(fn () => config('filament-fakester.enabled') && static::modelHasFactory($table))
                     ->schema([
                         TextInput::make('count')
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(1000)
-                            ->default(config('fakester.default_count', 25))
+                            ->default(config('filament-fakester.default_count', 25))
                             ->required(),
                     ])
                     ->action(function (array $data) use ($table): void {

@@ -17,7 +17,7 @@ class FillFormWithFakerAction
                     ->label('Fill with Faker')
                     ->icon('heroicon-o-sparkles')
                     ->color('gray')
-                    ->visible(fn () => config('fakester.enabled'))
+                    ->visible(fn () => config('filament-fakester.enabled'))
                     ->action(function () use ($schema): void {
                         $resolver = app(FakerValueResolver::class);
                         foreach ($schema->getFlatFields(withHidden: false) as $field) {

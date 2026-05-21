@@ -13,7 +13,7 @@ class SeedResourceAction
             ->label("Seed {$count} records")
             ->icon('heroicon-o-sparkles')
             ->color('gray')
-            ->visible(fn () => config('fakester.enabled'))
+            ->visible(fn () => config('filament-fakester.enabled'))
             ->requiresConfirmation()
             ->action(function () use ($model, $count): void {
                 $model::factory()->count($count)->create();

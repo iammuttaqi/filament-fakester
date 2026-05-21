@@ -18,7 +18,7 @@ class FakeRowTableAction
                     ->label('Fake row')
                     ->icon('heroicon-o-sparkles')
                     ->color('gray')
-                    ->visible(fn () => config('fakester.enabled') && static::modelHasFactory($table))
+                    ->visible(fn () => config('filament-fakester.enabled') && static::modelHasFactory($table))
                     ->action(function (Model $record): void {
                         $attrs = $record::factory()->definition();
                         $record->update($attrs);

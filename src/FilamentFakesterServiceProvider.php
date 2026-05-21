@@ -40,10 +40,8 @@ class FilamentFakesterServiceProvider extends PackageServiceProvider
                     ->askToStarRepoOnGitHub('iammuttaqi/filament-fakester');
             });
 
-        $configFileName = $package->shortName();
-
-        if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
-            $package->hasConfigFile();
+        if (file_exists($package->basePath('/../config/filament-fakester.php'))) {
+            $package->hasConfigFile('filament-fakester');
         }
 
         if (file_exists($package->basePath('/../database/migrations'))) {
