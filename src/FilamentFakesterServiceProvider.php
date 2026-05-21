@@ -9,6 +9,7 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Iammuttaqi\FilamentFakester\Commands\FilamentFakesterCommand;
+use Iammuttaqi\FilamentFakester\Support\MatcherRegistry;
 use Iammuttaqi\FilamentFakester\Testing\TestsFilamentFakester;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
@@ -58,7 +59,10 @@ class FilamentFakesterServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered(): void
+    {
+        $this->app->singleton(MatcherRegistry::class);
+    }
 
     public function packageBooted(): void
     {

@@ -1,63 +1,109 @@
-# This is my package filament-fakester
+# Filament Fakester
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/iammuttaqi/filament-fakester.svg?style=flat-square)](https://packagist.org/packages/iammuttaqi/filament-fakester)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/iammuttaqi/filament-fakester/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/iammuttaqi/filament-fakester/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/iammuttaqi/filament-fakester/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/iammuttaqi/filament-fakester/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/iammuttaqi/filament-fakester.svg?style=flat-square)](https://packagist.org/packages/iammuttaqi/filament-fakester)
 
+Faker-powered devtools for Filament. Drop-in plugin that adds:
 
+- A sparkles **hint action** on every `TextInput`, `Textarea`, `RichEditor`, `MarkdownEditor` — click to fill that one field with context-aware fake data (detects `email`, `phone`, `latitude`, `facebook`, `google_map`, `slug`, etc. by field name and HTML type).
+- A **form header action** to fill every visible field at once.
+- A per-row **"Fake row"** table action that regenerates a record from its `Factory::definition()`.
+- A **bulk header action** to create N fake records via factory.
+- An opt-in **`SeedResourceAction`** to seed list pages from a button.
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+All actions are hidden in production (or whenever `FAKESTER_ENABLED=false`), so it stays purely a local/staging devtool.
 
 ## Installation
 
-You can install the package via composer:
+Install via Composer (dev-only recommended):
 
 ```bash
-composer require iammuttaqi/filament-fakester
+composer require iammuttaqi/filament-fakester --dev
 ```
 
-> [!IMPORTANT]
-> If you have not set up a custom theme and are using Filament Panels follow the instructions in the [Filament Docs](https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme) first.
-
-After setting up a custom theme add the plugin's views to your theme css file or your app's css file if using the standalone packages.
-
-```css
-@source '../../../../vendor/iammuttaqi/filament-fakester/resources/**/*.blade.php';
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="filament-fakester-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
+Publish the config:
 
 ```bash
 php artisan vendor:publish --tag="filament-fakester-config"
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="filament-fakester-views"
 ```
 
 This is the contents of the published config file:
 
 ```php
 return [
+    'enabled' => env('FAKESTER_ENABLED', ! app()->isProduction()),
+
+    'features' => [
+        'hint_action'      => true,
+        'fill_form_action' => true,
+        'fake_row_action'  => true,
+        'bulk_fake_action' => true,
+        'seed_resource'    => true,
+    ],
+
+    'default_count' => 25,
 ];
 ```
 
 ## Usage
 
+### Register on a panel
+
 ```php
-$filamentFakester = new Iammuttaqi\FilamentFakester();
-echo $filamentFakester->echoPhrase('Hello, Iammuttaqi!');
+use Iammuttaqi\FilamentFakester\FilamentFakesterPlugin;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->plugin(FilamentFakesterPlugin::make());
+}
 ```
+
+### Per-panel features
+
+```php
+->plugin(
+    FilamentFakesterPlugin::make()->withFeatures([
+        'bulk_fake_action' => false,
+        'fake_row_action'  => false,
+    ])
+)
+```
+
+### Custom matcher
+
+Override built-ins or extend with project-specific field names:
+
+```php
+app(\Iammuttaqi\FilamentFakester\Support\MatcherRegistry::class)
+    ->register(fn (string $name, ?string $type) =>
+        $name === 'invoice_number' ? 'INV-' . fake()->numerify('######') : null
+    );
+```
+
+### Resource seed shortcut
+
+```php
+// inside ListPosts.php
+protected function getHeaderActions(): array
+{
+    return [
+        \Iammuttaqi\FilamentFakester\Actions\SeedResourceAction::make(\App\Models\Post::class, 100),
+    ];
+}
+```
+
+### Features
+
+- **Hint action**: Sparkles icon on every `TextInput`, `Textarea`, `RichEditor`, `MarkdownEditor` → click to fill that field with context-aware fake data.
+- **Fill form**: Form header action populates every visible field.
+- **Fake row**: Per-row table action regenerates that record using its `Factory::definition()`.
+- **Bulk fake rows**: Table header action creates N records via factory.
+- **Resource seed**: Opt-in `SeedResourceAction` for `List*` pages.
+
+All actions hidden when `FAKESTER_ENABLED=false` or in production by default.
 
 ## Testing
 
