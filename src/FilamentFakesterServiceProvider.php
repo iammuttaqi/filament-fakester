@@ -9,6 +9,7 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Iammuttaqi\FilamentFakester\Commands\FilamentFakesterCommand;
+use Iammuttaqi\FilamentFakester\Concerns\RegistersFakerHints;
 use Iammuttaqi\FilamentFakester\Support\MatcherRegistry;
 use Iammuttaqi\FilamentFakester\Testing\TestsFilamentFakester;
 use Illuminate\Filesystem\Filesystem;
@@ -19,6 +20,8 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class FilamentFakesterServiceProvider extends PackageServiceProvider
 {
+    use RegistersFakerHints;
+
     public static string $name = 'filament-fakester';
 
     public static string $viewNamespace = 'filament-fakester';
@@ -77,6 +80,11 @@ class FilamentFakesterServiceProvider extends PackageServiceProvider
 
         // Icon Registration
         FilamentIcon::register($this->getIcons());
+
+        // Global Hint Action Registration
+        if (config('filament-fakester.enabled')) {
+            $this->registerHintActions();
+        }
 
         // Handle Stubs
         if (app()->runningInConsole()) {

@@ -5,74 +5,50 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/iammuttaqi/filament-fakester/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/iammuttaqi/filament-fakester/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/iammuttaqi/filament-fakester.svg?style=flat-square)](https://packagist.org/packages/iammuttaqi/filament-fakester)
 
-Faker-powered devtools for Filament. Drop-in plugin that adds:
+Filling out forms in dev is tedious. Filament Fakester sticks a little sparkles button next to every `TextInput`, `Textarea`, `RichEditor`, and `MarkdownEditor` — one click and the field gets sensible fake data. It reads the field name and the input type, so `email` gets an email, `latitude` gets a coordinate, `slug` gets a slug, `phone` gets a phone number, and so on. In production it's gone — nothing renders unless you tell it to.
 
-- A sparkles **hint action** on every `TextInput`, `Textarea`, `RichEditor`, `MarkdownEditor` — click to fill that one field with context-aware fake data (detects `email`, `phone`, `latitude`, `facebook`, `google_map`, `slug`, etc. by field name and HTML type).
-- A **form header action** to fill every visible field at once.
-- A per-row **"Fake row"** table action that regenerates a record from its `Factory::definition()`.
-- A **bulk header action** to create N fake records via factory.
-- An opt-in **`SeedResourceAction`** to seed list pages from a button.
-
-All actions are hidden in production (or whenever `FAKESTER_ENABLED=false`), so it stays purely a local/staging devtool.
-
-## Installation
-
-Install via Composer (dev-only recommended):
+## Install
 
 ```bash
 composer require iammuttaqi/filament-fakester --dev
 ```
 
-Publish the config:
+That's it. The package self-registers through Laravel's service provider discovery, so the moment a Filament form component renders anywhere in your app — inside a panel, inside a standalone Livewire form, doesn't matter — the hint button is there. No plugin to wire into a panel, no service provider edits.
+
+Want to publish the config?
 
 ```bash
 php artisan vendor:publish --tag="filament-fakester-config"
 ```
 
-This is the contents of the published config file:
-
 ```php
 return [
     'enabled' => env('FAKESTER_ENABLED', ! app()->isProduction()),
-
-    'features' => [
-        'hint_action'      => true,
-        'fake_row_action'  => true,
-        'bulk_fake_action' => true,
-    ],
-
-    'default_count' => 25,
 ];
 ```
 
-## Usage
+Hidden in production by default. Force it on or off with `FAKESTER_ENABLED` in your env.
 
-### Register on a panel
+## What it figures out for you
 
-```php
-use Iammuttaqi\FilamentFakester\FilamentFakesterPlugin;
+The resolver looks at the field's name and HTML type and picks something that fits. A non-exhaustive taste:
 
-public function panel(Panel $panel): Panel
-{
-    return $panel
-        ->plugin(FilamentFakesterPlugin::make());
-}
-```
+| Field name / type | What you get |
+| --- | --- |
+| `email` (or `type="email"`) | `jane.doe@example.com` |
+| `phone`, `mobile`, `tel` | `+1-555-…` |
+| `latitude` / `longitude` | valid coordinates |
+| `slug` | `kebab-case-words` |
+| `url`, `website`, `facebook`, `google_map` | a plausible URL |
+| `password` | a random secret |
+| `name`, `first_name`, `last_name`, `company`, `city`, … | what you'd expect |
+| anything else | a short faker sentence |
 
-### Per-panel features
+`Textarea`, `RichEditor`, `MarkdownEditor` get longer paragraphs — HTML blocks for rich editors, plain markdown for the markdown one.
 
-```php
-->plugin(
-    FilamentFakesterPlugin::make()->withFeatures([
-        'bulk_fake_action' => false,
-        'fake_row_action'  => false,
-    ])
-)
-```
+## Teaching it your own fields
 
-### Custom matcher
-
-Override built-ins or extend with project-specific field names:
+Got an `invoice_number` or `order_ref` that needs a specific shape? Register a matcher anywhere in your app boot (e.g. `AppServiceProvider::boot`):
 
 ```php
 app(\Iammuttaqi\FilamentFakester\Support\MatcherRegistry::class)
@@ -81,45 +57,7 @@ app(\Iammuttaqi\FilamentFakester\Support\MatcherRegistry::class)
     );
 ```
 
-### Page-level helpers
-
-Filament v5 has no global form-level header action hook, so two helpers are opt-in per page — drop them into the page's `getHeaderActions()`.
-
-**Fill the whole form** (Create / Edit pages):
-
-```php
-use Iammuttaqi\FilamentFakester\Actions\FillFormWithFakerAction;
-
-protected function getHeaderActions(): array
-{
-    return [
-        FillFormWithFakerAction::make(),
-    ];
-}
-```
-
-**Seed N records via factory** (List pages):
-
-```php
-use Iammuttaqi\FilamentFakester\Actions\SeedResourceAction;
-
-protected function getHeaderActions(): array
-{
-    return [
-        SeedResourceAction::make(\App\Models\Post::class, 100),
-    ];
-}
-```
-
-### Features
-
-- **Hint action** (auto-wired): Sparkles icon on every `TextInput`, `Textarea`, `RichEditor`, `MarkdownEditor` → click to fill that field with context-aware fake data.
-- **Fake row** (auto-wired): Per-row table action regenerates that record using its `Factory::definition()`.
-- **Bulk fake rows** (auto-wired): Table header action creates N records via factory.
-- **Fill whole form** (opt-in via `FillFormWithFakerAction::make()`): page header button that populates every visible field.
-- **Resource seed** (opt-in via `SeedResourceAction::make()`): seed N rows from a `List*` page.
-
-All actions hidden when `FAKESTER_ENABLED=false` or in production by default.
+Return a value to override the default, return `null` to fall through to the built-in resolver. Matchers run before the built-ins, so yours always win.
 
 ## Testing
 
