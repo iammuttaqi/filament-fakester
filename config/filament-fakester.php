@@ -2,7 +2,7 @@
 
 // config for Iammuttaqi/FilamentFakester
 return [
-    'enabled' => env('FAKESTER_ENABLED', ! app()->isProduction()),
+    'enabled' => env('FAKESTER_ENABLED', env('APP_ENV') !== 'production'),
 
     'features' => [
         'hint_action' => true,
