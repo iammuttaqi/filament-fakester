@@ -41,8 +41,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Iammuttaqi\\FilamentFakester\\": "src/",
-            "Iammuttaqi\\FilamentFakester\\Database\\Factories\\": "database/factories/"
+            "Iammuttaqi\\FilamentFakester\\": "src/"
         }
     },
     "autoload-dev": {
@@ -63,10 +62,7 @@
         "laravel": {
             "providers": [
                 "Iammuttaqi\\FilamentFakester\\FilamentFakesterServiceProvider"
-            ],
-            "aliases": {
-                "FilamentFakester": "Iammuttaqi\\FilamentFakester\\Facades\\FilamentFakester"
-            }
+            ]
         }
     },
     "config": {
